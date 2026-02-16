@@ -8,4 +8,4 @@ User.hasMany(Task, { foreignKey: 'assignedTo', as: 'tasks' });
 Task.belongsTo(User, { foreignKey: 'assignedTo', as: 'volunteer' });
 Task.belongsTo(User, { foreignKey: 'assignedBy', as: 'manager' });
 
-module.exports = { User, VolunteerProfile };
+module.exports = { User, VolunteerProfile, Task };

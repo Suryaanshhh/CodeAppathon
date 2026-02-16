@@ -6,6 +6,7 @@ const sequelize = require('./configs/db');
 
 const volunteerRoutes = require('./routes/volunteerRoutes');
 const authRoutes = require('./routes/authRoutes');
+const taskRoutes = require('./routes/taskRoutes');
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 // 2. Route Middlewares
 app.use('/api/auth', authRoutes);
 app.use('/api/volunteer', volunteerRoutes);
+app.use('/api/tasks', taskRoutes);
 
 
 const PORT = process.env.PORT || 5000;
