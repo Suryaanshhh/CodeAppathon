@@ -44,7 +44,17 @@ exports.updateTaskStatus = async (req, res) => {
 // Get My Tasks (For Volunteers)
 exports.getMyTasks = async (req, res) => {
   try {
-    const tasks = await Task.findAll({ where: { assignedTo: req.user.id } });
+    const tasks = await Task.findAll({ 
+      where: { assignedTo: req.user.id },
+      include: [
+        {
+          model: User,
+          as: 'manager', // This alias must match the one in models/index.js
+          attributes: ['id', 'name'] // Only fetch these specific fields for security
+        }
+      ]
+    });
+    
     res.json({ success: true, data: tasks });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
