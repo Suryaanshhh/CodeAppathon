@@ -4,7 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const sequelize = require('./configs/db');
 
-// Import Routes
+const volunteerRoutes = require('./routes/volunteerRoutes');
 const authRoutes = require('./routes/authRoutes');
 
 const app = express();
@@ -16,6 +16,7 @@ app.use(express.json());
 
 // 2. Route Middlewares
 app.use('/api/auth', authRoutes);
+app.use('/api/volunteer', volunteerRoutes);
 
 
 const PORT = process.env.PORT || 5000;
