@@ -16,8 +16,8 @@ const sendOTPEmail = async (email, otp) => {
     subject: 'Your Login OTP - BloodConnect',
     html: `
       <div style="font-family: Arial, sans-serif; border: 1px solid #ddd; padding: 20px;">
-        <h2 style="color: #e63946;">BloodConnect Internal Portal</h2>
-        <p>You requested an OTP for login. Your code is:</p>
+        <h2 style="color: #e63946;">Blood Connect</h2>
+        <p>Your requested otp is:</p>
         <h1 style="letter-spacing: 5px; color: #1d3557;">${otp}</h1>
         <p>This code is valid for <b>10 minutes</b>. Do not share it with anyone.</p>
         <hr />
