@@ -9,4 +9,9 @@ router.post('/profile', protect, volunteerController.createOrUpdateProfile);
 
 router.get('/me', protect, volunteerController.getVolunteerStats);
 
+router.get('/availableVolunteer', protect, volunteerController.getAvailableVolunteers);
+
+
+
+
 module.exports = router;

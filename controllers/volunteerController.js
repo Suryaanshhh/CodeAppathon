@@ -48,3 +48,25 @@ exports.getVolunteerStats = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+
+exports.getAvailableVolunteers = async (req, res) => {
+  try {
+    const volunteers = await VolunteerProfile.findAll({
+      where: {
+        availabilityStatus: true   // or "available" if string
+      }
+    });
+
+    res.status(200).json({
+      success: true,
+      count: volunteers.length,
+      data: volunteers
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+};
