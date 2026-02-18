@@ -37,6 +37,97 @@ exports.signup = async (req, res) => {
     }
 };
 
+exports.requestSignupOTP = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        // check if already exists
+        const existingUser = await User.findOne({ where: { email } });
+        if (existingUser) {
+            return res.status(400).json({ message: "Email already registered" });
+        }
+
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const expiry = new Date(Date.now() + 10 * 60 * 1000);
+
+        // create temporary user record
+        const user = await User.create({
+            email,
+            otp,
+            otpExpiry: expiry,
+            isEmailVerified: false
+        });
+
+        await sendOTPEmail(email, otp);
+
+        res.json({
+            success: true,
+            message: "OTP sent for signup"
+        });
+
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+};
+
+
+exports.verifySignupOTP = async (req, res) => {
+    try {
+        const { email, otp } = req.body;
+
+        const user = await User.findOne({ where: { email } });
+
+        if (!user || user.otp !== otp || new Date() > user.otpExpiry) {
+            return res.status(400).json({ message: "Invalid or expired OTP" });
+        }
+
+        await user.update({
+            otp: null,
+            otpExpiry: null,
+        });
+
+        res.json({
+            success: true,
+            message: "Email verified. Complete registration."
+        });
+
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+};
+
+exports.completeSignup = async (req, res) => {
+    try {
+        const { email, name, password, role, city } = req.body;
+
+        const user = await User.findOne({ where: { email } });
+
+        if (!user || !user.isEmailVerified) {
+            return res.status(400).json({
+                message: "Email not verified"
+            });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        await user.update({
+            name,
+            password: hashedPassword,
+            role,
+            city
+        });
+
+        res.status(201).json({
+            success: true,
+            message: "Signup completed successfully"
+        });
+
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+};
+
 
 exports.loginWithPassword = async (req, res) => {
     try {

@@ -3,7 +3,11 @@ const router = express.Router();
 const authController = require('../controllers/authController');
 
 
-router.post('/signup', authController.signup);
+router.post('/signup', authController.completeSignup);
+router.post('/signup-otp', authController.verifySignupOTP);
+router.post('/request-signup-otp', authController.requestSignupOTP);
+
+
 
 
 router.post('/login-password', authController.loginWithPassword);
