@@ -7,7 +7,9 @@ router.post('/signup', authController.completeSignup);
 router.post('/signup-otp', authController.verifySignupOTP);
 router.post('/request-signup-otp', authController.requestSignupOTP);
 
-
+router.post('/forgotPasswordRequest', authController.forgotPasswordRequest);
+router.post('/forgot-pass-otp', authController.verifyForgotPasswordOTP);
+router.post('/resetPasswords', authController.resetPassword);
 
 
 router.post('/login-password', authController.loginWithPassword);

@@ -198,3 +198,93 @@ exports.loginWithOTP = async (req, res) => {
         res.status(500).json({ success: false, error: error.message });
     }
 };
+
+exports.forgotPasswordRequest = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        const user = await User.findOne({ where: { email } });
+
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found"
+            });
+        }
+
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const expiry = new Date(Date.now() + 10 * 60 * 1000);
+
+        await user.update({
+            otp,
+            otpExpiry: expiry
+        });
+
+        await sendOTPEmail(email, otp);
+
+        res.json({
+            success: true,
+            message: "OTP sent to your email"
+        });
+
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+};
+
+exports.verifyForgotPasswordOTP = async (req, res) => {
+    try {
+        const { email, otp } = req.body;
+
+        const user = await User.findOne({ where: { email } });
+
+        if (!user || user.otp !== otp || new Date() > user.otpExpiry) {
+            return res.status(400).json({
+                message: "Invalid or expired OTP"
+            });
+        }
+
+        await user.update({
+            otp: null,
+            otpExpiry: null,
+            
+        });
+
+        res.json({
+            success: true,
+            message: "OTP verified. You can reset password now."
+        });
+
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+};
+
+exports.resetPassword = async (req, res) => {
+    try {
+        const { email, newPassword } = req.body;
+
+        const user = await User.findOne({ where: { email } });
+
+        if (!user ) {
+            return res.status(400).json({
+                message: "User not found."
+            });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        await user.update({
+            password: hashedPassword,
+         
+        });
+
+        res.json({
+            success: true,
+            message: "Password reset successful"
+        });
+
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+};
