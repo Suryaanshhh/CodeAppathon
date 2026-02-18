@@ -102,9 +102,9 @@ exports.completeSignup = async (req, res) => {
 
         const user = await User.findOne({ where: { email } });
 
-        if (!user || !user.isEmailVerified) {
+        if (!user) {
             return res.status(400).json({
-                message: "Email not verified"
+                message: "User does not exist"
             });
         }
 

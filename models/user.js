@@ -4,7 +4,7 @@ const sequelize = require('../configs/db');
 const User = sequelize.define('User', {
   name: { 
     type: DataTypes.STRING, 
-    allowNull: false 
+    allowNull: true
   },
   email: { 
     type: DataTypes.STRING, 
@@ -14,16 +14,16 @@ const User = sequelize.define('User', {
   },
   password: { 
     type: DataTypes.STRING, 
-    allowNull: false 
+    allowNull:true 
   },
   role: { 
     // Defined roles: Admin, City Manager, HR Manager, Helpline Team, Volunteer
     type: DataTypes.ENUM('Admin', 'City Manager', 'HR Manager', 'Helpline Team', 'Volunteer'), 
-    allowNull: false 
+    allowNull: true
   },
   city: { 
     type: DataTypes.STRING, 
-    allowNull: false 
+    allowNull:true
   },
   status: { 
     type: DataTypes.ENUM('Active', 'Inactive'), 
